@@ -11,8 +11,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 8000
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
 
-# Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Copy Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose ports
+EXPOSE 80
+
+# Start Nginx and FastAPI
+CMD service nginx start && uvicorn main:app --host 0.0.0.0 --port 8000

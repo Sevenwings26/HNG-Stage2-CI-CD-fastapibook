@@ -1,8 +1,8 @@
-# FastAPI Book Management API
+# FastAPI Book Application
 
 ## Overview
-
-This project is a RESTful API built with FastAPI for managing a book collection. It provides comprehensive CRUD (Create, Read, Update, Delete) operations for books with proper error handling, input validation, and documentation.
+This is a FastAPI application deployed with a CI/CD pipeline for managing a book collection. It provides comprehensive CRUD (Create, Read, Update, Delete) operations for books with proper error handling, input validation, and documentation.
+The application is publicly accessible and uses **Nginx as a reverse proxy** for improved performance and security.
 
 ## Features
 
@@ -33,51 +33,96 @@ fastapi-book-project/
 │   └── test_books.py       # API endpoint tests
 ├── main.py                 # Application entry point
 ├── requirements.txt        # Project dependencies
+├── Dockerfile              # For production
+├── docker-compose.yml      # For production
+├── nginx.conf              # For production
+├── .github/workflows
+│   ├── ci.yml              # test action
+│   └── cd.yml              # Deploy action
 └── README.md
 ```
 
-## Technologies Used
 
-- Python 3.12
-- FastAPI
-- Pydantic
-- pytest
-- uvicorn
+## Features
+- **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python.
+- **Nginx**: Used as a reverse proxy to handle incoming requests and forward them to the FastAPI application.
+- **CI/CD Pipeline**: Automated testing and deployment using GitHub Actions and Render.
 
-## Installation
+## Deployment
+The application is deployed on [Render](https://render.com) and is publicly accessible. Nginx is configured as a reverse proxy to:
+- Improve performance by handling static files and load balancing.
+- Enhance security by acting as a shield for the FastAPI application.
 
+### Nginx Configuration
+The `nginx.conf` file is used to configure Nginx as a reverse proxy. Here's a snippet of the configuration:
+
+```nginx
+events {}
+
+http {
+  server {
+    listen 80;
+
+    location / {
+      proxy_pass http://localhost:8000;  # Forward requests to FastAPI
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+  }
+}
+```
+
+## CI/CD Pipeline
+The CI/CD pipeline is set up using GitHub Actions:
+- **CI Pipeline**: Runs `pytest` on pull requests to the `main` branch.
+- **CD Pipeline**: Automatically deploys the application to Render when changes are merged into the `main` branch.
+
+### Workflow Files
+- `.github/workflows/ci.yml`: Defines the CI pipeline.
+- `.github/workflows/cd.yml`: Defines the CD pipeline.
+
+## How to Run Locally
 1. Clone the repository:
-
-```bash
-git clone https://github.com/hng12-devbotops/fastapi-book-project.git
-cd fastapi-book-project
-```
-
-2. Create a virtual environment:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
+   ```bash
+   git clone https://github.com/Sevenwings26/HNG-Stage2-CI-CD-fastapibook.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd HNG-Stage2-CI-CD-fastapibook
+   ```
 3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Run the application:
+   ```bash
+   uvicorn main:app --reload
+   ```
+5. Run nginx
+   ```bash
+  cd\
+  cd nginx
+  start ngnix 
+   ```
+6. Access the application at `http://localhost`.
+
+## How to Deploy
+1. Push changes to the `main` branch.
+2. The CD pipeline will automatically deploy the application to Render.
+
+## Technologies Used
+- **FastAPI**: Web framework for building the API.
+- **Nginx**: Reverse proxy for handling requests.
+- **GitHub Actions**: CI/CD automation.
+- **Render**: Deployment platform.
+
+## Running Tests
 
 ```bash
-pip install -r requirements.txt
+pytest
 ```
-
-## Running the Application
-
-1. Start the server:
-
-```bash
-uvicorn main:app
-```
-
-2. Access the API documentation:
-
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
 
 ## API Endpoints
 
@@ -93,6 +138,15 @@ uvicorn main:app
 
 - `GET /healthcheck` - Check API status
 
+## Error Handling
+
+The API includes proper error handling for:
+
+- Non-existent books
+- Invalid book IDs
+- Invalid genre types
+- Malformed requests
+
 ## Book Schema
 
 ```json
@@ -105,42 +159,5 @@ uvicorn main:app
 }
 ```
 
-Available genres:
-
-- Science Fiction
-- Fantasy
-- Horror
-- Mystery
-- Romance
-- Thriller
-
-## Running Tests
-
-```bash
-pytest
-```
-
-## Error Handling
-
-The API includes proper error handling for:
-
-- Non-existent books
-- Invalid book IDs
-- Invalid genre types
-- Malformed requests
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, please open an issue in the GitHub repository.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

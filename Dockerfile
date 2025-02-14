@@ -2,13 +2,14 @@
 FROM python:3.10
 
 # Set working directory
-WORKDIR /app
+# WORKDIR /app
 
-# Copy project files
-COPY . /app
-
-# Install dependencies
+# Copy the requirements file and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code
+COPY . .
 
 # Install Nginx
 RUN apt update && apt install -y nginx

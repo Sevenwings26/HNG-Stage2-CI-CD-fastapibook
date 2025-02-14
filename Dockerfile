@@ -1,24 +1,24 @@
-# Use an official Python runtime as the base image
-FROM python:3.9-slim
+# Use Python official image
+FROM python:3.10
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt .
+# Copy project files
+COPY . /app
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
-COPY . .
-
 # Install Nginx
-RUN apt-get update && apt-get install -y nginx
+RUN apt update && apt install -y nginx
 
 # Copy Nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
-# Expose ports
-EXPOSE 80
+# Expose necessary ports
+EXPOSE 80 8000
 
-# Start Nginx and FastAPI
+# Start FastAPI and Nginx together
 CMD service nginx start && uvicorn main:app --host 0.0.0.0 --port 8000

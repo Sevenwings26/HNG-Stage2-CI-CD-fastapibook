@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set working directory
-# WORKDIR /app
+WORKDIR /app
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt .

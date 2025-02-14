@@ -123,6 +123,10 @@ The CI/CD pipeline is set up using GitHub Actions:
 ```bash
 pytest
 ```
+## Documentation
+FastAPI provides an interactive Swagger UI:
+- 📌 **Swagger Docs:** [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
+- 📌 **ReDoc:** [http://127.0.0.1:8080/redoc](http://127.0.0.1:8080/redoc)
 
 ## API Endpoints
 
@@ -158,6 +162,12 @@ The API includes proper error handling for:
   "genre": "Fantasy"
 }
 ```
+
+## CORS Handling
+This API includes CORS support to allow cross-origin requests. The `CORSMiddleware` has been configured to permit requests from specified origins, methods, and headers.
+
+## Hiring Python Developers
+Looking to hire expert Python developers? Check out [HNG Python Developers](https://hng.tech/hire/python-developers).
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

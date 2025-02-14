@@ -1,0 +1,7 @@
+services:
+  - name: fastapi-app
+    build:
+      docker: docker-compose.yml
+    routes:
+      - url: /
+    port: 80
